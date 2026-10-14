@@ -1,0 +1,4 @@
+# 真实 MCP 模式依赖（离线 Mock 模式零依赖可跑）
+mcp>=1.8
+httpx>=0.27
+python-dotenv>=1.0

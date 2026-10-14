@@ -1,0 +1,349 @@
+{
+  "tool": "order-list",
+  "arguments": {},
+  "isError": false,
+  "parsed": {
+    "success": true,
+    "code": 200,
+    "message": "请求成功",
+    "datetime": "2026-10-14 14:18:04",
+    "traceId": "a6238ef4e4b309c86b97887eb1e1ab3b",
+    "data": {
+      "list": [
+        {
+          "orderId": "1030795960000753405098833364",
+          "orderType": "1",
+          "createTime": "2026-08-08 19:18:57",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1421104",
+          "storeName": "麦当劳深圳田面国际文创小镇餐厅",
+          "orderStatus": "订单已完成",
+          "orderProductList": [
+            {
+              "productCode": "9900013291",
+              "productName": "精选超值随心配",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "521316",
+                  "name": "高达吉士双牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "4437",
+                  "name": "小杯玉米杯",
+                  "quantity": 1
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "13.9"
+        },
+        {
+          "orderId": "1030119830000806781052415557",
+          "orderType": "1",
+          "createTime": "2026-08-08 19:08:20",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1421104",
+          "storeName": "麦当劳深圳田面国际文创小镇餐厅",
+          "orderStatus": "订单已完成",
+          "orderProductList": [
+            {
+              "productCode": "9900015330",
+              "productName": "牛堡蘸酱超满足双人餐",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "4648",
+                  "name": "不素之霸双层牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "1100",
+                  "name": "巨无霸",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "920343",
+                  "name": "蘸酱脆皮鸡柳（牧场酱）",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "4810",
+                  "name": "中薯条",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "3071",
+                  "name": "无糖可口可乐中杯",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "3505",
+                  "name": "锡兰红茶",
+                  "quantity": 1
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "0"
+        },
+        {
+          "orderId": "1030245570000806671274900301",
+          "orderType": "1",
+          "createTime": "2026-08-04 19:18:36",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1400247",
+          "storeName": "麦当劳广州康王中路餐厅",
+          "orderStatus": "订单已完成",
+          "orderProductList": [
+            {
+              "productCode": "9900013291",
+              "productName": "精选超值随心配",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "521316",
+                  "name": "高达吉士双牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "521329",
+                  "name": "无糖可乐麦炫酷",
+                  "quantity": 1
+                }
+              ]
+            },
+            {
+              "productCode": "9900011943",
+              "productName": "10块麦乐鸡",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "1401",
+                  "name": "麦乐鸡5块",
+                  "quantity": 2
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "27.9"
+        },
+        {
+          "orderId": "1030883470000793815783453079",
+          "orderType": "1",
+          "createTime": "2026-07-30 19:19:14",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1400247",
+          "storeName": "麦当劳广州康王中路餐厅",
+          "orderStatus": "订单已完成",
+          "orderProductList": [
+            {
+              "productCode": "9900013291",
+              "productName": "精选超值随心配",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "521316",
+                  "name": "高达吉士双牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "4106",
+                  "name": "香芋派",
+                  "quantity": 1
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "13.9"
+        },
+        {
+          "orderId": "1030889060000752917141892109",
+          "orderType": "1",
+          "createTime": "2026-07-21 19:23:49",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1400247",
+          "storeName": "麦当劳广州康王中路餐厅",
+          "orderStatus": "订单已完成",
+          "orderProductList": [
+            {
+              "productCode": "9900013291",
+              "productName": "精选超值随心配",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "521316",
+                  "name": "高达吉士双牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "3071",
+                  "name": "无糖可口可乐中杯",
+                  "quantity": 1
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "13.9"
+        },
+        {
+          "orderId": "1030245890000752860351015016",
+          "orderType": "1",
+          "createTime": "2026-07-19 16:02:47",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1400247",
+          "storeName": "麦当劳广州康王中路餐厅",
+          "orderStatus": "订单已完成",
+          "orderProductList": [
+            {
+              "productCode": "9900013291",
+              "productName": "精选超值随心配",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "521316",
+                  "name": "高达吉士双牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "3505",
+                  "name": "锡兰红茶",
+                  "quantity": 1
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "13.9"
+        },
+        {
+          "orderId": "1030533930000551976002122484",
+          "orderType": "1",
+          "createTime": "2026-05-03 19:29:49",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1400019",
+          "storeName": "麦当劳广州华夏康隆餐厅",
+          "orderStatus": "订单已完成",
+          "orderProductList": [
+            {
+              "productCode": "9900013304",
+              "productName": "人气经典随心配",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "521316",
+                  "name": "高达吉士双牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "521336",
+                  "name": "怡泉+C麦炫酷",
+                  "quantity": 1
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "13.9"
+        },
+        {
+          "orderId": "1030175610000750666096686623",
+          "orderType": "1",
+          "createTime": "2026-04-22 19:39:42",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1400019",
+          "storeName": "麦当劳广州华夏康隆餐厅",
+          "orderStatus": "订单已完成",
+          "orderProductList": [
+            {
+              "productCode": "9900013304",
+              "productName": "人气经典随心配",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "521316",
+                  "name": "高达吉士双牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "4437",
+                  "name": "小杯玉米杯",
+                  "quantity": 1
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "13.9"
+        },
+        {
+          "orderId": "1030192630000551709034671800",
+          "orderType": "1",
+          "createTime": "2026-04-22 19:38:47",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1400019",
+          "storeName": "麦当劳广州华夏康隆餐厅",
+          "orderStatus": "订单已取消",
+          "orderProductList": [
+            {
+              "productCode": "9900013304",
+              "productName": "人气经典随心配",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "521316",
+                  "name": "高达吉士双牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "4437",
+                  "name": "小杯玉米杯",
+                  "quantity": 1
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "13.9"
+        },
+        {
+          "orderId": "1030912520000551271585541756",
+          "orderType": "1",
+          "createTime": "2026-04-03 19:38:41",
+          "beType": "1",
+          "beCode": "",
+          "storeCode": "1400271",
+          "storeName": "麦当劳广州中山八路二餐厅",
+          "orderStatus": "订单已完成",
+          "orderProductList": [
+            {
+              "productCode": "9900013304",
+              "productName": "人气经典随心配",
+              "quantity": 1,
+              "comboItemList": [
+                {
+                  "productCode": "521316",
+                  "name": "高达吉士双牛堡",
+                  "quantity": 1
+                },
+                {
+                  "productCode": "4437",
+                  "name": "小杯玉米杯",
+                  "quantity": 1
+                }
+              ]
+            }
+          ],
+          "realTotalAmount": "13.9"
+        }
+      ]
+    }
+  },
+  "text": "# API Response Information\n\nBelow is the response from an API call. To help you understand the data, I've provided:\n\n1. A detailed description of all fields in the response structure\n2. The complete API response\n\n## Response Structure\n\n> Content-Type: application/json\n\n- **data**: No comments found. (Type: object)\n  - **data.list**: 订单列表 (Type: array)\n    - **data.list[].orderId**: 订单编码 (Type: string)\n    - **data.list[].orderType**: 订单类型 (Type: string)\n    - **data.list[].createTime**: 下单时间 (Type: string)\n    - **data.list[].beType**: 门店类型 (Type: string)\n    - **data.list[].beCode**: BE编码 (Type: string)\n    - **data.list[].storeCode**: 门店编码 (Type: string)\n    - **data.list[].storeName**: 门店名称 (Type: string)\n    - **data.list[].orderStatus**: 订单状态 (Type: string)\n    - **data.list[].orderProductList**: 商品 (Type: array)\n      - **data.list[].orderProductList[].productCode**: 商品code (Type: string)\n      - **data.list[].orderProductList[].productName**: 商品名称 (Type: string)\n      - **data.list[].orderProductList[].quantity**: 商品数量 (Type: integer)\n      - **data.list[].orderProductList[].comboItemList**: 子项列表 (Type: array)\n    - **data.list[].realTotalAmount**: 总金额 (Type: string)\n- **message**: No comments found. (Type: string)\n- **traceId**: No comments found. (Type: string)\n\n## Original Response\n\n{\"success\":true,\"code\":200,\"message\":\"请求成功\",\"datetime\":\"2026-10-14 14:18:04\",\"traceId\":\"a6238ef4e4b309c86b97887eb1e1ab3b\",\"data\":{\"list\":[{\"orderId\":\"1030795960000753405098833364\",\"orderType\":\"1\",\"createTime\":\"2026-08-08 19:18:57\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1421104\",\"storeName\":\"麦当劳深圳田面国际文创小镇餐厅\",\"orderStatus\":\"订单已完成\",\"orderProductList\":[{\"productCode\":\"9900013291\",\"productName\":\"精选超值随心配\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"521316\",\"name\":\"高达吉士双牛堡\",\"quantity\":1},{\"productCode\":\"4437\",\"name\":\"小杯玉米杯\",\"quantity\":1}]}],\"realTotalAmount\":\"13.9\"},{\"orderId\":\"1030119830000806781052415557\",\"orderType\":\"1\",\"createTime\":\"2026-08-08 19:08:20\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1421104\",\"storeName\":\"麦当劳深圳田面国际文创小镇餐厅\",\"orderStatus\":\"订单已完成\",\"orderProductList\":[{\"productCode\":\"9900015330\",\"productName\":\"牛堡蘸酱超满足双人餐\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"4648\",\"name\":\"不素之霸双层牛堡\",\"quantity\":1},{\"productCode\":\"1100\",\"name\":\"巨无霸\",\"quantity\":1},{\"productCode\":\"920343\",\"name\":\"蘸酱脆皮鸡柳（牧场酱）\",\"quantity\":1},{\"productCode\":\"4810\",\"name\":\"中薯条\",\"quantity\":1},{\"productCode\":\"3071\",\"name\":\"无糖可口可乐中杯\",\"quantity\":1},{\"productCode\":\"3505\",\"name\":\"锡兰红茶\",\"quantity\":1}]}],\"realTotalAmount\":\"0\"},{\"orderId\":\"1030245570000806671274900301\",\"orderType\":\"1\",\"createTime\":\"2026-08-04 19:18:36\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1400247\",\"storeName\":\"麦当劳广州康王中路餐厅\",\"orderStatus\":\"订单已完成\",\"orderProductList\":[{\"productCode\":\"9900013291\",\"productName\":\"精选超值随心配\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"521316\",\"name\":\"高达吉士双牛堡\",\"quantity\":1},{\"productCode\":\"521329\",\"name\":\"无糖可乐麦炫酷\",\"quantity\":1}]},{\"productCode\":\"9900011943\",\"productName\":\"10块麦乐鸡\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"1401\",\"name\":\"麦乐鸡5块\",\"quantity\":2}]}],\"realTotalAmount\":\"27.9\"},{\"orderId\":\"1030883470000793815783453079\",\"orderType\":\"1\",\"createTime\":\"2026-07-30 19:19:14\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1400247\",\"storeName\":\"麦当劳广州康王中路餐厅\",\"orderStatus\":\"订单已完成\",\"orderProductList\":[{\"productCode\":\"9900013291\",\"productName\":\"精选超值随心配\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"521316\",\"name\":\"高达吉士双牛堡\",\"quantity\":1},{\"productCode\":\"4106\",\"name\":\"香芋派\",\"quantity\":1}]}],\"realTotalAmount\":\"13.9\"},{\"orderId\":\"1030889060000752917141892109\",\"orderType\":\"1\",\"createTime\":\"2026-07-21 19:23:49\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1400247\",\"storeName\":\"麦当劳广州康王中路餐厅\",\"orderStatus\":\"订单已完成\",\"orderProductList\":[{\"productCode\":\"9900013291\",\"productName\":\"精选超值随心配\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"521316\",\"name\":\"高达吉士双牛堡\",\"quantity\":1},{\"productCode\":\"3071\",\"name\":\"无糖可口可乐中杯\",\"quantity\":1}]}],\"realTotalAmount\":\"13.9\"},{\"orderId\":\"1030245890000752860351015016\",\"orderType\":\"1\",\"createTime\":\"2026-07-19 16:02:47\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1400247\",\"storeName\":\"麦当劳广州康王中路餐厅\",\"orderStatus\":\"订单已完成\",\"orderProductList\":[{\"productCode\":\"9900013291\",\"productName\":\"精选超值随心配\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"521316\",\"name\":\"高达吉士双牛堡\",\"quantity\":1},{\"productCode\":\"3505\",\"name\":\"锡兰红茶\",\"quantity\":1}]}],\"realTotalAmount\":\"13.9\"},{\"orderId\":\"1030533930000551976002122484\",\"orderType\":\"1\",\"createTime\":\"2026-05-03 19:29:49\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1400019\",\"storeName\":\"麦当劳广州华夏康隆餐厅\",\"orderStatus\":\"订单已完成\",\"orderProductList\":[{\"productCode\":\"9900013304\",\"productName\":\"人气经典随心配\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"521316\",\"name\":\"高达吉士双牛堡\",\"quantity\":1},{\"productCode\":\"521336\",\"name\":\"怡泉+C麦炫酷\",\"quantity\":1}]}],\"realTotalAmount\":\"13.9\"},{\"orderId\":\"1030175610000750666096686623\",\"orderType\":\"1\",\"createTime\":\"2026-04-22 19:39:42\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1400019\",\"storeName\":\"麦当劳广州华夏康隆餐厅\",\"orderStatus\":\"订单已完成\",\"orderProductList\":[{\"productCode\":\"9900013304\",\"productName\":\"人气经典随心配\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"521316\",\"name\":\"高达吉士双牛堡\",\"quantity\":1},{\"productCode\":\"4437\",\"name\":\"小杯玉米杯\",\"quantity\":1}]}],\"realTotalAmount\":\"13.9\"},{\"orderId\":\"1030192630000551709034671800\",\"orderType\":\"1\",\"createTime\":\"2026-04-22 19:38:47\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1400019\",\"storeName\":\"麦当劳广州华夏康隆餐厅\",\"orderStatus\":\"订单已取消\",\"orderProductList\":[{\"productCode\":\"9900013304\",\"productName\":\"人气经典随心配\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"521316\",\"name\":\"高达吉士双牛堡\",\"quantity\":1},{\"productCode\":\"4437\",\"name\":\"小杯玉米杯\",\"quantity\":1}]}],\"realTotalAmount\":\"13.9\"},{\"orderId\":\"1030912520000551271585541756\",\"orderType\":\"1\",\"createTime\":\"2026-04-03 19:38:41\",\"beType\":\"1\",\"beCode\":\"\",\"storeCode\":\"1400271\",\"storeName\":\"麦当劳广州中山八路二餐厅\",\"orderStatus\":\"订单已完成\",\"orderProductList\":[{\"productCode\":\"9900013304\",\"productName\":\"人气经典随心配\",\"quantity\":1,\"comboItemList\":[{\"productCode\":\"521316\",\"name\":\"高达吉士双牛堡\",\"quantity\":1},{\"productCode\":\"4437\",\"name\":\"小杯玉米杯\",\"quantity\":1}]}],\"realTotalAmount\":\"13.9\"}]}}"
+}

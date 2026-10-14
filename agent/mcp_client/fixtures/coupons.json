@@ -1,0 +1,8 @@
+[
+  {"couponId": "C2401", "title": "板烧鸡腿堡买一送一", "type": "BOGO", "minSpend": 0, "discount": 23.0, "expiry": "2026-10-20", "applicable": ["M1003"], "source": "mock"},
+  {"couponId": "C2402", "title": "麦辣鸡腿堡立减6元", "type": "DISCOUNT", "minSpend": 20, "discount": 6.0, "expiry": "2026-10-17", "applicable": ["M1002"], "source": "mock"},
+  {"couponId": "C2403", "title": "大薯条半价券", "type": "DISCOUNT", "minSpend": 0, "discount": 6.75, "expiry": "2026-10-18", "applicable": ["S2001"], "source": "mock"},
+  {"couponId": "C2404", "title": "满39减8（全场）", "type": "THRESHOLD", "minSpend": 39, "discount": 8.0, "expiry": "2026-10-25", "applicable": ["*"], "source": "mock"},
+  {"couponId": "C2405", "title": "第二杯半价（饮料）", "type": "SECOND_HALF", "minSpend": 0, "discount": 4.75, "expiry": "2026-10-31", "applicable": ["D3001", "D3002", "D3003", "D3004"], "source": "mock"},
+  {"couponId": "C2406", "title": "麦乐鸡5块+零度可乐 套餐减5元", "type": "COMBO", "minSpend": 0, "discount": 5.0, "expiry": "2026-10-19", "applicable": ["S2002", "D3002"], "source": "mock"}
+]

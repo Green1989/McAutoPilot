@@ -1,0 +1,50 @@
+name: McAutoPilot Daily Run
+
+# 每天北京时间 11:30（UTC 03:30）执行"午饭自动驾驶"循环：
+# 感知 -> 决策 -> dry-run 算价草稿 -> 把决策日记 commit 回仓库（活仓库 = 连载）
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write  # 决策日志自动 commit 回仓库
+
+concurrency:
+  group: autopilot
+  cancel-in-progress: false
+
+jobs:
+  autopilot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run autopilot
+        env:
+          MCD_MCP_TOKEN: ${{ secrets.MCD_MCP_TOKEN }}
+          MCD_DRY_RUN: ${{ vars.MCD_DRY_RUN == 'false' && 'false' || 'true' }}
+          MCD_BUDGET: ${{ vars.MCD_BUDGET || '40' }}
+        run: python -m agent.main
+
+      # mock 模式（无 Secret）不改动 DECISIONS.md，此步自动跳过
+      - name: Commit decision diary
+        run: |
+          git config user.name "McAutoPilot Bot"
+          git config user.email "actions@github.com"
+          git add DECISIONS.md state/nutrition.json state/last-decision.json
+          if git diff --cached --quiet; then
+            echo "nothing to commit (mock mode or no change)"
+          else
+            MSG=$(cat state/commit-msg.txt 2>/dev/null || echo "🍱 McAutoPilot daily decision")
+            git commit -m "$MSG"
+            git push
+          fi

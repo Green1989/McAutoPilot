@@ -1,0 +1,19 @@
+[
+  {"productCode": "M1001", "name": "巨无霸", "category": "汉堡", "price": 25.5, "kcal": 550, "protein_g": 26, "carbs_g": 45, "fat_g": 28, "sodium_mg": 1010, "tags": ["经典", "牛肉"]},
+  {"productCode": "M1002", "name": "麦辣鸡腿堡", "category": "汉堡", "price": 22.5, "kcal": 570, "protein_g": 24, "carbs_g": 49, "fat_g": 30, "sodium_mg": 890, "tags": ["辣", "鸡肉"]},
+  {"productCode": "M1003", "name": "板烧鸡腿堡", "category": "汉堡", "price": 23.0, "kcal": 460, "protein_g": 25, "carbs_g": 42, "fat_g": 19, "sodium_mg": 830, "tags": ["不辣", "鸡肉"]},
+  {"productCode": "M1004", "name": "麦香鱼", "category": "汉堡", "price": 19.5, "kcal": 380, "protein_g": 15, "carbs_g": 41, "fat_g": 16, "sodium_mg": 640, "tags": ["鱼肉"]},
+  {"productCode": "M1005", "name": "双吉士堡", "category": "汉堡", "price": 21.0, "kcal": 440, "protein_g": 25, "carbs_g": 35, "fat_g": 21, "sodium_mg": 950, "tags": ["牛肉", "芝士"]},
+  {"productCode": "S2001", "name": "薯条(大)", "category": "小食", "price": 13.5, "kcal": 470, "protein_g": 6, "carbs_g": 55, "fat_g": 23, "sodium_mg": 350, "tags": ["经典"]},
+  {"productCode": "S2002", "name": "麦乐鸡(5块)", "category": "小食", "price": 12.5, "kcal": 230, "protein_g": 13, "carbs_g": 14, "fat_g": 14, "sodium_mg": 500, "tags": ["鸡肉"]},
+  {"productCode": "S2003", "name": "那么大鸡排", "category": "小食", "price": 14.0, "kcal": 280, "protein_g": 17, "carbs_g": 18, "fat_g": 15, "sodium_mg": 620, "tags": ["鸡肉", "新品"]},
+  {"productCode": "S2004", "name": "香芋派", "category": "小食", "price": 8.0, "kcal": 280, "protein_g": 3, "carbs_g": 34, "fat_g": 15, "sodium_mg": 200, "tags": ["甜"]},
+  {"productCode": "D3001", "name": "可口可乐(中)", "category": "饮料", "price": 9.5, "kcal": 180, "protein_g": 0, "carbs_g": 47, "fat_g": 0, "sodium_mg": 15, "tags": ["含糖"]},
+  {"productCode": "D3002", "name": "零度可口可乐(中)", "category": "饮料", "price": 9.5, "kcal": 0, "protein_g": 0, "carbs_g": 0, "fat_g": 0, "sodium_mg": 40, "tags": ["无糖"]},
+  {"productCode": "D3003", "name": "锡兰红茶(中)", "category": "饮料", "price": 11.0, "kcal": 60, "protein_g": 1, "carbs_g": 15, "fat_g": 0, "sodium_mg": 25, "tags": ["茶"]},
+  {"productCode": "D3004", "name": "鲜煮咖啡(中)", "category": "饮料", "price": 11.5, "kcal": 15, "protein_g": 1, "carbs_g": 2, "fat_g": 0, "sodium_mg": 10, "tags": ["咖啡", "低卡"]},
+  {"productCode": "V4001", "name": "蔬菜沙拉", "category": "轻食", "price": 16.5, "kcal": 90, "protein_g": 3, "carbs_g": 12, "fat_g": 3, "sodium_mg": 120, "tags": ["低卡", "纤维"]},
+  {"productCode": "V4002", "name": "阳光橙VB饮料(中)", "category": "轻食", "price": 12.0, "kcal": 120, "protein_g": 0, "carbs_g": 30, "fat_g": 0, "sodium_mg": 30, "tags": ["VC", "饮料"]},
+  {"productCode": "B5001", "name": "吉士蛋麦满分", "category": "早餐", "price": 15.0, "kcal": 330, "protein_g": 17, "carbs_g": 30, "fat_g": 15, "sodium_mg": 720, "tags": ["早餐", "蛋"]},
+  {"productCode": "B5002", "name": "猪柳蛋麦满分", "category": "早餐", "price": 18.5, "kcal": 420, "protein_g": 22, "carbs_g": 31, "fat_g": 22, "sodium_mg": 910, "tags": ["早餐"]}
+]

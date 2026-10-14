@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 敏感信息（Token 只从环境变量/GitHub Secrets 读，永不落仓库）
+.env
+.env.*
+MCP Token.txt
+*.token
+
+# 运行时产物：探针原始输出可能含个人数据，绝不提交（脱敏副本走 docs/mcp-tool-samples/）
+state/probe/
+state/cache/
+state/preview.md
+*.log
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

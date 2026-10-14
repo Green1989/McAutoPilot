@@ -1,9 +1,8 @@
-# 报名 Issue 草稿（待发布）
+# 报名 Issue（已提交并通过审核 ✅）
 
-> 提交方式：在 https://github.com/M-China/mcd-developer-innovation-challenge 仓库创建 Issue
-> 格式要求：标题自定义；正文为下方模板，**不超过 1000 字，不能带图片**
-> 时机：D3 材料（README 润色 + 演示 GIF）上线并自查后提交
-> 提交后确认：系统会在 Issue 下回复成功通知；Star>0 后出现在 RANKING.md
+> 状态：**2026-10-14 已报名成功**。Issue：https://github.com/M-China/mcd-developer-innovation-challenge/issues/701
+> 官方机器人 M-China-Official 于 2026-10-14 12:59（UTC）回复："您的作品已成功参赛，您可以通过官方项目的排行榜.md查看排名"
+> 以下为提交原文存档。
 
 ---
 

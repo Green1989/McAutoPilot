@@ -1,5 +1,27 @@
 # DEVLOG — McAutoPilot 开发日志
 
+## D3 · 2026-10-14 · 上线打磨（进行中）
+
+### 完成内容
+- **发车时间调整**：11:30 → 10:00（北京，cron `0 2 * * *`）——GitHub cron 高峰期可能延迟几分钟到几十分钟，提前给午饭决策留缓冲（用户决策）；全仓引用同步清理，仓库描述同步更新
+- **演示 GIF**：IAB 真实截取仓库三视图（首页 README 区 / DECISIONS.md / Actions 运行列表），Pillow 合成 docs/demo.gif（含字幕条与结尾卡），脚本 scripts/make_demo_gif.py 可复现
+- **README 打磨**：演示区 + 上线状态徽章 + "已上线运行"链接、fork 指南扩成 6 步（含 MCD_PREVIEW 试跑建议）、FAQ 四问（Token 安全/会不会乱下单/怎么懂口味/为什么用 Actions）
+- **仓库运营**：topics 打标（mcp/mcdonalds/ai-agent/github-actions/automation/model-context-protocol/hackathon/python/mcp-server/lunch）
+- **传播与报名**：docs/promotion/post-drafts.md（掘金/V2EX/即刻/腾讯云/X 五平台首发文案 + 发布纪律）；docs/registration-issue.md（官方标准格式报名草稿，≤1000 字无图）
+- **截图工程发现**：GitHub Actions 运行日志匿名访客不可见（Sign in to view logs）→ 第三帧改用运行列表页；GitHub 新版界面用嵌套滚动容器，window.scrollTo 无效 → 改 CUA 滚轮滚动；多模态子智能体三轮验收截图
+
+### 代理决策清单（授权来源：AGENTS.md 无人值守政策预授权）
+| # | 决策 | 依据 | 回滚方式 |
+|---|------|------|---------|
+| 1 | 发车 11:30 → 10:00 | 用户明确指示（cron 延迟缓冲） | 改 cron 一行 |
+| 2 | 报名押后到 D3 材料就绪后，只备草稿不提交 | 用户明确指示 | docs/registration-issue.md 随时可发 |
+| 3 | 演示 GIF 第三帧用 Actions 运行列表页而非日志页 | 匿名访客看不到日志（实测），列表页的 ✅ 历史同样成立且所有人可见 | 重截即可 |
+| 4 | 为截图补跑一次 MCD_PREVIEW 运行使列表顶部为 ✅ | 视觉呈现；该次运行为预览模式无日记副作用，历史 ❌ 是真实记录未删除（诚实） | 无需回滚 |
+| 5 | GIF 用真实截图而非摆拍终端 | 日记真实性原则延伸到宣传素材 | 重新生成即可 |
+| 6 | 传播文案只写草稿不代发 | 各平台需用户账号，且属外向动作 | 草稿在 docs/promotion/ |
+
+---
+
 ## D2 · 2026-10-14 · 真实数据接入 + 决策引擎 v1
 
 ### 完成内容

@@ -1,12 +1,19 @@
 # McAutoPilot 🍟 — 我把午饭外包给了 AI
 
-> 每天 11:30，一个 GitHub Actions 会自己醒来：看看今天有什么券、回顾我最近吃过什么、检查我的营养缺口和预算，然后**替我决定午饭吃什么**——领券、算出最优组合、生成订单草稿，并把这一切写进一本公开的《AI 吃饭日记》。
+> 每天 10:00，一个 GitHub Actions 会自己醒来：看看今天有什么券、回顾我最近吃过什么、检查我的营养缺口和预算，然后**替我决定午饭吃什么**——领券、算出最优组合、生成订单草稿，并把这一切写进一本公开的《AI 吃饭日记》。
 >
 > 我唯一要做的，是吃饭。
 
-[![autopilot](https://img.shields.io/badge/daily-11:30%20%E5%8C%97%E4%BA%AC%E6%97%B6%E9%97%B4-autopilot-red)](.github/workflows/autopilot.yml)
+[![autopilot](https://img.shields.io/badge/daily-10.00%20%E5%8C%97%E4%BA%AC%E6%97%B6%E9%97%B4-autopilot-red)](.github/workflows/autopilot.yml)
 [![dry-run](https://img.shields.io/badge/default-dry--run-green)](agent/config.py)
 [![MCP](https://img.shields.io/badge/McDonald's-MCP-gold)](https://mcp.mcd.cn)
+[![status](https://img.shields.io/badge/%E5%B7%B2%E4%B8%8A%E7%BA%BF%E8%BF%90%E8%A1%8C-%E6%97%A5%E8%AE%B0%E8%BF%9E%E8%BD%BD%E4%B8%AD-brightgreen)](DECISIONS.md)
+
+## 演示
+
+![McAutoPilot 演示](docs/demo.gif)
+
+*动图内容：仓库首页 → [DECISIONS.md](DECISIONS.md)（AI 吃饭日记）→ GitHub Actions 运行日志（真实的感知-决策-算价输出）。所有数据来自麦当劳官方 MCP 的真实调用。*
 
 ## 为什么做这个
 
@@ -22,7 +29,7 @@ McAutoPilot 把这些决策全部交给一个每天自动运行的 Agent。它�
 ## 它每天怎么思考
 
 ```
-11:30 (cron) ──▶ 感知 ──▶ 决策 ──▶ 执行 ──▶ 记录
+10:00 (cron) ──▶ 感知 ──▶ 决策 ──▶ 执行 ──▶ 记录
                  │         │        │        │
                  │         │        │        └─ DECISIONS.md + 营养台账
                  │         │        │           自动 commit（活仓库）
@@ -33,7 +40,7 @@ McAutoPilot 把这些决策全部交给一个每天自动运行的 Agent。它�
                  └─ 可用优惠券 / 历史订单 / 当日菜单（麦当劳 MCP）
 ```
 
-每天一篇决策记录长这样（示意，见 [DECISIONS.md](DECISIONS.md)）：
+每天一篇决策记录长这样（示意格式；**真实连载已在进行中** → [DECISIONS.md](DECISIONS.md)，第一篇 Day 1 由真实菜单/券/历史订单数据在 2026-10-14 生成）：
 
 ```markdown
 ## Day 12 · 2026-10-14 · ☀️ 周三
@@ -51,20 +58,25 @@ McAutoPilot 把这些决策全部交给一个每天自动运行的 Agent。它�
 
 ## 快速开始（fork-and-run）
 
-1. **Fork 本仓库**
-2. 在 [open.mcd.cn](https://open.mcd.cn) 申请麦当劳 MCP Token（免费，需审核）
-3. 仓库 **Settings → Secrets and variables → Actions → New repository secret**：
-   - Name: `MCD_MCP_TOKEN`，Value: 你的 Token
-4. 到 **Actions** 页启用 workflow（fork 默认禁用），手动点一次 `Run workflow` 验证
+**第 0 步（可选，先看效果）**：什么都不配，fork 后直接跑——没有 Token 会自动进入离线 Mock 模式，用模拟数据走完整个决策循环，先看看它怎么"思考"。
 
-默认 `dry-run`：Agent 只决策、只写日记、只生成订单草稿，**不会真实下单**。想让它动真格，在仓库 **Settings → Secrets and variables → Actions → Variables** 里加 `MCD_DRY_RUN=false`。
+正式接入（约 5 分钟）：
 
-没有 Token 也能玩：不配置 Secret 时自动进入**离线 Mock 模式**，用模拟数据跑完整决策循环，先看效果再决定要不要 Token。
+1. **Fork 本仓库**（右上角 Fork 按钮）
+2. 在 [open.mcd.cn](https://open.mcd.cn) 申请麦当劳 MCP Token（免费，需审核，建议尽早）
+3. 你的 fork 仓库 → **Settings → Secrets and variables → Actions → New repository secret**：
+   - Name 填 `MCD_MCP_TOKEN`，Value 填你的 Token（Secret 内容不会进代码、不会出现在日志里）
+4. **Actions** 页启用 workflow（fork 默认禁用，点绿色按钮启用）
+5. 建议先在 **Settings → Secrets and variables → Actions → Variables** 添加 `MCD_PREVIEW` = `true` 手动跑一次——用真实数据出一份决策预览（`state/preview.md`），确认一切正常后再删掉这个变量
+6. 删掉 `MCD_PREVIEW` 后，每天北京时间 10:00 它会自动醒来写日记；日记会自动 commit 回你的 fork（fork 里自带 commit 历史的连载）
+
+> 想调预算？Variables 里加 `MCD_BUDGET`（默认 40 元）。
+> 想动真格下单？`MCD_DRY_RUN=false` ——但请三思，v1 的执行链只到"订单草稿"为止。
 
 ## 项目结构
 
 ```
-.github/workflows/autopilot.yml   # 每日 11:30 自动驾驶循环（含日记自动 commit）
+.github/workflows/autopilot.yml   # 每日 10:00 自动驾驶循环（含日记自动 commit）
 agent/
   main.py                         # 主循环入口（python -m agent.main）
   config.py                       # 配置：Token 只从环境变量读，永不落仓库
@@ -94,6 +106,20 @@ CONTEST_DECLARATION.md            # 参赛声明（官方要求，不可改动�
 | `MCD_DRY_RUN` | `true` | true = 只决策+算价草稿；false 才会真实领券/下单（v2 实装） |
 | `MCD_BUDGET` | `40` | 单餐预算上限（元） |
 | `MCD_PREVIEW` | `false` | true = 真实数据跑完整决策但只写预览，不落 DECISIONS.md（fork 试跑推荐先开这个） |
+
+## 常见问题
+
+**Token 安全吗？会不会泄露？**
+Token 只通过 GitHub Secrets 注入环境变量，代码里零硬编码；仓库内的 `mcp-config.example.json` 只有占位符；本地开发走 `.env`（已 gitignore）。推送到 GitHub 前，作者对全部暂存内容做过 Token 值的全文扫描，零命中。
+
+**它会不会乱下单、乱扣钱？**
+默认 `dry-run`：执行链止步于 `calculate-price`——这是一个纯计算接口，不下单、不领券、不动账户。真实下单需要显式设置 `MCD_DRY_RUN=false`，且 v1 尚未实装下单代码，双重保险。
+
+**它怎么知道"我"想吃什么？**
+看三样东西：你的历史订单（换口味规则会惩罚连续重复）、你的营养台账（7 天滚动均值找缺口）、当天的券（不用就浪费）。它不猜口味玄学，每条理由都带数字。
+
+**为什么选 GitHub Actions 当运行时？**
+零服务器、零成本、天然公开——commit 历史就是这本日记的连载本身，fork 即私有部署。
 
 ## 设计原则
 

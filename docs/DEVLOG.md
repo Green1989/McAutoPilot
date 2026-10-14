@@ -8,7 +8,7 @@
 - **README 打磨**：演示区 + 上线状态徽章 + "已上线运行"链接、fork 指南扩成 6 步（含 MCD_PREVIEW 试跑建议）、FAQ 四问（Token 安全/会不会乱下单/怎么懂口味/为什么用 Actions）
 - **仓库运营**：topics 打标（mcp/mcdonalds/ai-agent/github-actions/automation/model-context-protocol/hackathon/python/mcp-server/lunch）
 - **传播与报名**：docs/promotion/post-drafts.md（掘金/V2EX/即刻/腾讯云/X 五平台首发文案 + 发布纪律）；docs/registration-issue.md（官方标准格式报名草稿，≤1000 字无图）
-- **截图工程发现**：GitHub Actions 运行日志匿名访客不可见（Sign in to view logs）→ 第三帧改用运行列表页；GitHub 新版界面用嵌套滚动容器，window.scrollTo 无效 → 改 CUA 滚轮滚动；多模态子智能体三轮验收截图
+- **截图工程发现**：GitHub Actions 运行日志匿名访客不可见（Sign in to view logs）→ 第三帧改用运行列表页；GitHub 新版界面用嵌套滚动容器，window.scrollTo 无效 → 改 CUA 滚轮/整页截图+DOM 定位裁剪；整页截图按视口分块拼接，固定导航栏在分块边界重复渲染 → 裁剪带须完全落在单个分块内；**shields 静态徽章不支持 %20 空格编码，且以 HTTP 200 返回"404 badge"SVG（判活不能只看状态码，要看 SVG 内容）**；多模态子智能体多轮验收截图
 
 ### 代理决策清单（授权来源：AGENTS.md 无人值守政策预授权）
 | # | 决策 | 依据 | 回滚方式 |

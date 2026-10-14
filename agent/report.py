@@ -30,9 +30,12 @@ def render_entry(
     price_info: dict | None,
     mode: str,
     ledger_reasons: list[str],
+    exec_summary=None,
+    claimed: int = 0,
 ) -> str:
     today = datetime.now()
     items_txt = " + ".join(it.name for it in decision.items)
+    engine_name = "求解器引擎 v2" if getattr(decision, "engine", "v1") == "v2" else "规则引擎 v1"
     lines: list[str] = []
     lines.append(f"## Day {day} · {today:%Y-%m-%d} · 周{WEEKDAY_CN[today.weekday()]}{_badge(day)}")
     lines.append("")
@@ -56,6 +59,12 @@ def render_entry(
         idx += 1
     lines.append("")
 
+    breakdown = getattr(decision, "breakdown", None)
+    if breakdown:
+        parts = [f"{label} {'+' if c >= 0 else ''}{c:.1f}" for label, c, _ in breakdown]
+        lines.append("**分数构成**：" + " · ".join(parts))
+        lines.append("")
+
     if decision.nutrition:
         n = decision.nutrition
         lines.append(
@@ -65,7 +74,16 @@ def render_entry(
         lines.append("**营养台账**：本组合未匹配到营养数据，暂不计入")
     lines.append("")
 
-    exec_line = "**执行**：dry-run —— 订单草稿已生成，未下单、未领券（真实下单需自行开启 `MCD_DRY_RUN=false`）" if mode != "live" else "**执行**：已提交执行（live 模式）"
+    if mode == "live" and exec_summary is not None:
+        if exec_summary.status == "created":
+            exec_line = f"**执行**：✅ 已创建订单（{exec_summary.order_id}，待人工支付——支付链接只落本地 state/last-order.json，不进仓库）"
+        else:
+            exec_line = f"**执行**：未创建订单——{exec_summary.reason}"
+    elif mode == "live":
+        exec_line = "**执行**：live 模式但执行链未运行（见 Actions 日志）"
+    else:
+        claim_note = f"（另：自动领取了 {claimed} 张券）" if claimed else ""
+        exec_line = f"**执行**：dry-run —— 订单草稿已生成，未下单{claim_note}（真实下单需 MCD_DRY_RUN=false + 当日二次确认）"
     store_line = f"**数据源**：{snap.store_name or '未知门店'} · {len(snap.menu)} 个在售餐品 · {len(snap.coupons)} 张可用券 · 积分 {snap.points:.0f}"
     lines.append(exec_line)
     lines.append(store_line)
@@ -74,7 +92,7 @@ def render_entry(
         lines.append("")
         lines.append("**感知降级**：" + "；".join(snap.failures))
     lines.append("")
-    lines.append(f"<sub>score {decision.score} · 由 McAutoPilot 规则引擎 v1 于 {today:%H:%M} 自动生成</sub>")
+    lines.append(f"<sub>score {decision.score} · 由 McAutoPilot {engine_name} 于 {today:%H:%M} 自动生成</sub>")
     lines.append("")
     lines.append("---")
     lines.append("")

@@ -201,7 +201,9 @@ def _to_float(v) -> float:
 async def price_check(client: McpClientBase, store_code: str, items: list[MenuItem], coupon: Coupon | None) -> dict | None:
     """dry-run 的"订单草稿"：调 calculate-price 真实算价（纯计算，无副作用）。
 
-    返回 {origin, pay, discount, product_list}（元）；失败返回 None。
+    返回 {origin, pay, discount, product_list, take_ways}（金额为元）；
+    take_ways 来自 data.takeWayList，是 create-order 必填的取餐方式来源。
+    失败返回 None。
     """
     if not store_code:
         return None
@@ -224,4 +226,5 @@ async def price_check(client: McpClientBase, store_code: str, items: list[MenuIt
         "pay": fen(payload.get("price")),
         "discount": fen(payload.get("discount")),
         "product_list": payload.get("productList", []),
+        "take_ways": payload.get("takeWayList", []) or [],
     }

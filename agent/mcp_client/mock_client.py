@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 from .base import McpClientBase, ToolResult, extract_json
@@ -136,6 +137,19 @@ class MockMcpClient(McpClientBase):
                 "price": product_price,
                 "productList": product_list,
                 "takeWayList": [{"code": "eat-in", "title": "堂食"}, {"code": "take-in-store", "title": "外带"}],
+            }
+            result.text = _ok(data)
+        elif name == "auto-bind-coupons":
+            # 写操作模拟：只回"已领取 N 张"，无任何真实副作用（主流程 mock 模式不会调用，仅供单测）
+            result.text = _ok({"bindCount": 3, "message": "自动领取成功", "coupons": ["免费脆薯饼", "人气麦旋风买一送一", "9.9元中杯冰美式"]})
+        elif name == "create-order":
+            # 写操作模拟：返回待支付订单。真实 create-order 也只生成待支付订单（支付人工完成）
+            order_id = f"MOCK-{int(time.time())}"
+            data = {
+                "orderId": order_id,
+                "orderStatus": "待支付",
+                "payUrl": f"https://mock.mcd.cn/pay/{order_id}",
+                "takeWayCode": (arguments.get("takeWayCode") or "eat-in"),
             }
             result.text = _ok(data)
         else:

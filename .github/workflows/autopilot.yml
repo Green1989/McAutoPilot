@@ -1,10 +1,11 @@
 name: McAutoPilot Daily Run
 
-# 每天北京时间 11:30（UTC 03:30）执行"午饭自动驾驶"循环：
+# 每天北京时间 10:00（UTC 02:00）执行"午饭自动驾驶"循环：
 # 感知 -> 决策 -> dry-run 算价草稿 -> 把决策日记 commit 回仓库（活仓库 = 连载）
+# 说明：GitHub cron 高峰期可能延迟几分钟到几十分钟，10:00 发车给午饭决策留足缓冲。
 on:
   schedule:
-    - cron: "30 3 * * *"
+    - cron: "0 2 * * *"
   workflow_dispatch:
 
 permissions:

@@ -1,4 +1,6 @@
 # 真实 MCP 模式依赖（离线 Mock 模式零依赖可跑）
-mcp>=1.8
+# 锁 1.x：2.x 移除了 streamablehttp_client 旧别名（http_client.py 已做双路径兼容，
+# 升 2.x 前先在 CI 验证 modern 分支）
+mcp>=1.29,<2
 httpx>=0.27
 python-dotenv>=1.0

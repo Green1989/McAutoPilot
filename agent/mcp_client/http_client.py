@@ -37,15 +37,28 @@ class HttpMcpClient(McpClientBase):
         return self
 
     async def _connect(self) -> None:
-        # 懒加载官方 SDK：仅真实模式需要
+        # 懒加载官方 SDK：仅真实模式需要。
+        # 1.x：streamablehttp_client(url, headers=..., timeout=...) 直接收 headers；
+        # 2.x：只剩 streamable_http_client(url, http_client=httpx.AsyncClient(...))。
         from mcp import ClientSession
-        from mcp.client.streamable_http import streamablehttp_client
+
+        try:
+            from mcp.client.streamable_http import streamablehttp_client as _transport
+
+            def _factory(url: str, headers: dict, timeout: float):
+                return _transport(url, headers=headers, timeout=timeout)
+        except ImportError:
+            import httpx
+            from mcp.client.streamable_http import streamable_http_client as _transport
+
+            def _factory(url: str, headers: dict, timeout: float):
+                return _transport(url, http_client=httpx.AsyncClient(headers=headers, timeout=timeout))
 
         headers = {"Authorization": f"Bearer {self.token}"}
         self._stack = AsyncExitStack()
-        # streamablehttp_client 返回 (read_stream, write_stream, get_session_id)
+        # 三元组：(read_stream, write_stream, get_session_id)
         read, write, _ = await self._stack.enter_async_context(
-            streamablehttp_client(self.url, headers=headers, timeout=self.request_timeout)
+            _factory(self.url, headers, self.request_timeout)
         )
         self._session = await self._stack.enter_async_context(ClientSession(read, write))
         await self._session.initialize()

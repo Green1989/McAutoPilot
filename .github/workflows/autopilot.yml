@@ -33,6 +33,7 @@ jobs:
           MCD_MCP_TOKEN: ${{ secrets.MCD_MCP_TOKEN }}
           MCD_DRY_RUN: ${{ vars.MCD_DRY_RUN == 'false' && 'false' || 'true' }}
           MCD_BUDGET: ${{ vars.MCD_BUDGET || '40' }}
+          MCD_PREVIEW: ${{ vars.MCD_PREVIEW || 'false' }}
         run: python -m agent.main
 
       # mock 模式（无 Secret）不改动 DECISIONS.md，此步自动跳过

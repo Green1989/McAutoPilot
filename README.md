@@ -132,7 +132,7 @@ Token 只通过 GitHub Secrets 注入环境变量，代码里零硬编码；仓�
 
 - [x] D1 感知链路：MCP 客户端 + Mock 模式 + Actions 定时任务
 - [x] D2 决策引擎 v1（规则打分）+ DECISIONS.md 自动渲染与 commit + 营养台账
-- [ ] D3 演示 GIF + fork 指南完善 + 首波发布
+- [x] D3 演示 GIF + fork 指南完善 + 首波发布（掘金长文已发：[juejin.cn/spost/7696387828728594473](https://juejin.cn/spost/7696387828728594473)）
 - [ ] v2 求解器（多约束优化替代规则打分）+ 真实下单执行链
 - [ ] webhook 实时推送"今日决策卡"
 

@@ -4,7 +4,7 @@
 >
 > 我唯一要做的，是吃饭。
 
-[![autopilot](https://img.shields.io/badge/daily-10.00%20%E5%8C%97%E4%BA%AC%E6%97%B6%E9%97%B4-autopilot-red)](.github/workflows/autopilot.yml)
+[![autopilot](https://img.shields.io/badge/daily--10.00--%E5%8C%97%E4%BA%AC%E6%97%B6%E9%97%B4-autopilot-red)](.github/workflows/autopilot.yml)
 [![dry-run](https://img.shields.io/badge/default-dry--run-green)](agent/config.py)
 [![MCP](https://img.shields.io/badge/McDonald's-MCP-gold)](https://mcp.mcd.cn)
 [![status](https://img.shields.io/badge/%E5%B7%B2%E4%B8%8A%E7%BA%BF%E8%BF%90%E8%A1%8C-%E6%97%A5%E8%AE%B0%E8%BF%9E%E8%BD%BD%E4%B8%AD-brightgreen)](DECISIONS.md)

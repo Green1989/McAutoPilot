@@ -47,6 +47,9 @@ class HistoryOrder:
     date: str  # yyyy-MM-dd
     items: list[str]  # 菜品名（含套餐子项），已脱敏
     total: float
+    # 来源标注：order-list = 真实历史订单；decision-history = 日记决策记忆（dry-run
+    # 下的决策不是订单，order-list 看不到，需由 agent.memory 并回）
+    source: str = "order-list"
 
 
 @dataclass

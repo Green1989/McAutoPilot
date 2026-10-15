@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 # 可选依赖：本地开发装了 python-dotenv 就自动加载 .env（.env 已进 .gitignore）
@@ -14,6 +15,18 @@ except ImportError:
     pass
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+
+# 统一北京时区（UTC+8 固定偏移，无夏令时）：日记时间戳、同日幂等的"今天"、
+# 下单二次确认的当日令牌全用这个口径——GitHub runner 是 UTC，裸 now() 会差 8 小时。
+BJ_TZ = timezone(timedelta(hours=8))
+
+
+def bj_now() -> datetime:
+    return datetime.now(BJ_TZ)
+
+
+def bj_today() -> str:
+    return bj_now().date().isoformat()
 
 
 def _env_bool(key: str, default: bool) -> bool:
@@ -38,6 +51,8 @@ class Settings:
     confirm_order: str = ""
     # 自动领券（auto-bind-coupons 写操作，零成本）。默认关，保持 dry-run 语义纯净。
     auto_claim: bool = False
+    # 跳过同日幂等保护（同一天已写过日记仍强制重跑；测试/手动重写用）
+    force: bool = False
     # 今日决策卡 webhook（企业微信/飞书/Discord/通用）。空 = 关闭。
     webhook_url: str = ""
     # 上游限流 600 req/min（0.1s/req），留出安全余量
@@ -57,6 +72,7 @@ class Settings:
             engine=engine if engine in ("v1", "v2") else "v1",
             confirm_order=os.environ.get("MCD_CONFIRM_ORDER", "").strip(),
             auto_claim=_env_bool("MCD_AUTO_CLAIM", False),
+            force=_env_bool("MCD_FORCE", False),
             webhook_url=os.environ.get("MCD_WEBHOOK_URL", "").strip(),
             request_interval=float(os.environ.get("MCD_REQUEST_INTERVAL", "0.15")),
             request_timeout=float(os.environ.get("MCD_REQUEST_TIMEOUT", "30")),

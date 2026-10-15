@@ -13,9 +13,8 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from datetime import date
 
-from .config import Settings
+from .config import Settings, bj_today
 from .mcp_client.base import McpClientBase
 from .perceive import BETYPE_DINEIN, ORDER_TYPE_DINEIN, _payload
 
@@ -82,7 +81,7 @@ async def execute_order(
     price_info: dict | None,
 ) -> ExecutionResult:
     """真实下单：护栏检查 → create-order（待支付订单）→ 解析订单号与支付链接。"""
-    today = date.today().isoformat()
+    today = bj_today()  # 当日令牌按北京时间比对（与日记/幂等同口径）
     ok, why = _guards(settings, price_info, today)
     if not ok:
         return ExecutionResult(status="skipped", reason=why)

@@ -98,7 +98,7 @@ tests/                            # 单测：求解器约束 / 执行链护栏 /
 scripts/
   probe_mcp.py                    # MCP 探针：摸清工具返回结构（内置脱敏）
 docs/mcp-tool-samples/            # 真实 MCP 返回结构脱敏样例（决策引擎设计依据）
-state/                            # 营养台账 / 决策状态 / commit 消息（随决策 commit）
+state/                            # 营养台账 / 决策记忆 / 决策状态 / commit 消息（随决策 commit）
 DECISIONS.md                      # AI 吃饭日记（核心产出）
 MCP_INTEGRATION.md                # 麦当劳 MCP 集成说明
 CONTEST_DECLARATION.md            # 参赛声明（官方要求，不可改动）
@@ -115,6 +115,7 @@ CONTEST_DECLARATION.md            # 参赛声明（官方要求，不可改动�
 | `MCD_ENGINE` | `v1` | 决策引擎：`v1` 规则打分 / `v2` 求解器（硬约束+加权目标，日记带分数构成） |
 | `MCD_CONFIRM_ORDER` | 空 | 下单二次确认：必须等于运行当天日期（YYYY-MM-DD），每天显式更新才持续授权 |
 | `MCD_AUTO_CLAIM` | `false` | true = 每次运行先自动领取麦麦省可用券（零成本写操作） |
+| `MCD_FORCE` | `false` | true = 跳过同日幂等保护（当天已写过日记也强制重跑，测试/手动重写用） |
 | `MCD_WEBHOOK_URL`（Secret） | 空 | 今日决策卡推送：企业微信/飞书/Discord/通用 webhook 自动适配 |
 
 ## 常见问题

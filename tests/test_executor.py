@@ -3,7 +3,7 @@ import asyncio
 from datetime import date, timedelta
 
 from agent.brain import Decision
-from agent.config import Settings
+from agent.config import Settings, bj_today
 from agent.executor import claim_coupons, execute_order
 from agent.mcp_client.mock_client import MockMcpClient
 from agent.perceive import Coupon, MenuItem
@@ -13,7 +13,7 @@ def _settings(**overrides) -> Settings:
     base = dict(
         mcp_url="https://mock", mcp_token="",
         dry_run=False, budget=40.0,
-        confirm_order=date.today().isoformat(),
+        confirm_order=bj_today(),
     )
     base.update(overrides)
     return Settings(**base)
@@ -54,7 +54,7 @@ def test_guard_confirm_token_must_match_today():
     r = _run(execute_order(MockMcpClient(), _settings(confirm_order=""), "1000001", _decision(), PRICE_OK))
     assert r.status == "skipped" and "二次确认" in r.reason
 
-    stale = (date.today() - timedelta(days=1)).isoformat()
+    stale = (date.fromisoformat(bj_today()) - timedelta(days=1)).isoformat()
     r = _run(execute_order(MockMcpClient(), _settings(confirm_order=stale), "1000001", _decision(), PRICE_OK))
     assert r.status == "skipped" and "二次确认" in r.reason
 

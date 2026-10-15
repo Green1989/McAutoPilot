@@ -24,6 +24,12 @@
 | 5 | 支付链接/订单号只落 gitignore 的 state/last-order.json | 链接含账号上下文，公开仓库不可见 | 无需回滚 |
 | 6 | mock 客户端补 create-order/auto-bind 模拟 | 执行链单测需要；mock 主流程永不触达写操作 | 删两段分支即可 |
 
+### Day 2 验证与 v2 合并（2026-10-15 上午）
+- **验证结论：PASS（3/3）**——运行全绿；DECISIONS.md 出现 "## Day 2 · 2026-10-15" 且由 McAutoPilot Bot commit（a34a048）；数据真实（广州长兴路餐厅 · 126 餐品 · 2 券 · 实测算价 ¥31.5，非 Mock）
+- **异常记录（诚实）**：scheduled 触发 10:00 未出现——workflow state=active、cron 合法，等到 11:10 仍无 queued，判定为 GitHub 调度器丢触发（cron 自 11:30 改 10:00 后的首次出现，疑似注册时滞，平台侧问题）；11:11 以 workflow_dispatch 手动补跑产出 Day 2（26s 全绿）。Day 3 起观察 scheduled 是否恢复正常；若今日稍后 scheduled 补跑导致同日出现 Day 3 条目，按诚实原则保留不删
+- **v2 已合并 main**（dde81b9，合并后 22 测试全绿），仓库变量 `MCD_ENGINE=v2` 已设置——Day 3 起由求解器引擎决策（撤变量即秒回 v1）
+- backlog（本次发现，未改代码）：① dry-run 下 order-list 不含"日记里的昨日决策"，换口味规则感知不到 Day 1 重复（Day 2 仍选同款芝士安格斯）——应把 state/last-decision.json 纳入重复度输入；② 日记时间戳用 runner 本地时间（UTC 03:11），应改为北京时间
+
 ---
 
 ## D3 · 2026-10-14 · 上线打磨

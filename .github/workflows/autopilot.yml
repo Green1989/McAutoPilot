@@ -35,6 +35,10 @@ jobs:
           MCD_DRY_RUN: ${{ vars.MCD_DRY_RUN == 'false' && 'false' || 'true' }}
           MCD_BUDGET: ${{ vars.MCD_BUDGET || '40' }}
           MCD_PREVIEW: ${{ vars.MCD_PREVIEW || 'false' }}
+          # v2 增量（默认值保持 v1 行为不变）：引擎切换 / 下单二次确认 / 自动领券
+          MCD_ENGINE: ${{ vars.MCD_ENGINE || 'v1' }}
+          MCD_CONFIRM_ORDER: ${{ vars.MCD_CONFIRM_ORDER || '' }}
+          MCD_AUTO_CLAIM: ${{ vars.MCD_AUTO_CLAIM || 'false' }}
         run: python -m agent.main
 
       # mock 模式（无 Secret）不改动 DECISIONS.md，此步自动跳过
@@ -50,3 +54,10 @@ jobs:
             git commit -m "$MSG"
             git push
           fi
+
+      # 可选：今日决策卡推送到群机器人（企业微信/飞书/Discord/通用）。
+      # 未配置 Secret 时静默跳过、退出码恒 0，绝不让流水线变红。
+      - name: Push decision card (optional webhook)
+        env:
+          MCD_WEBHOOK_URL: ${{ secrets.MCD_WEBHOOK_URL }}
+        run: python -m agent.notify

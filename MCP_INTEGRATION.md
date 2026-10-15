@@ -47,11 +47,21 @@
 | 感知 | `order-list` | 历史订单（仅取菜品名/数量/金额做画像，隐私字段不落地） |
 | 感知 | `list-nutrition-foods` | 营养成分库（`[N]{列名}: CSV行` 表格文本） |
 | 感知 | `query-my-account` | 麦享会积分余额 |
-| 执行(dry-run) | `calculate-price` | 含优惠真实算价（纯计算无副作用）——"订单草稿"的核心 |
+| 执行(dry-run) | `calculate-price` | 含优惠真实算价（纯计算无副作用）——"订单草稿"的核心；其 `takeWayList` 也是真实下单的取餐方式来源 |
+| 执行(live, v2) | `auto-bind-coupons` | 自动领取麦麦省可用券（无参写操作，`MCD_AUTO_CLAIM=true` 时每次运行前置执行） |
+| 执行(live, v2) | `create-order` | 创建**待支付**订单（storeCode/orderType/beType/takeWayCode/items 必填）——支付永远人工完成 |
 
 > 完整返回结构样例见 [docs/mcp-tool-samples/](docs/mcp-tool-samples/)（已脱敏）。
-> 写操作类工具（`create-order` / `auto-bind-coupons` / `cancel-order` 等）仅在
-> `MCD_DRY_RUN=false` 的 live 模式才会被调用，v1 默认永不触碰。
+
+### 写操作工具的安全设计（`agent/executor.py`）
+
+写操作只在 live 模式触达，且 create-order 前必须通过**三重护栏**：
+
+1. **双开关**：`MCD_DRY_RUN=false`（总闸）+ `MCD_CONFIRM_ORDER=运行当天日期`（二次确认——日期每天变，陈旧配置无法持续授权）；
+2. **预算硬上限**：以 `calculate-price` 的真实实付为准，超过 `MCD_BUDGET` 直接中止；
+3. **支付留人**：create-order 只生成待支付订单 + 支付链接，链接只落本地 `state/last-order.json`（gitignore 保护），agent 不碰任何支付动作。
+
+执行结果（含未创建订单的原因）会如实写进当日日记——护栏拦下本身也是决策记录的一部分。
 
 ### 返回格式的两个坑（适配都做在了 `agent/mcp_client/base.py::extract_json`）
 

@@ -33,10 +33,12 @@ McAutoPilot 把这些决策全部交给一个每天自动运行的 Agent。它�
                  │         │        │        │
                  │         │        │        └─ DECISIONS.md + 营养台账
                  │         │        │           自动 commit（活仓库）
-                 │         │        ├─ 领券 + 订单草稿（默认 dry-run）
-                 │         │        └─ 可选 webhook 通知
+                 │         │        ├─ 订单草稿（默认 dry-run）
+                 │         │        ├─ 可选：自动领券 + 真实下单（三重护栏）
+                 │         │        └─ 可选：决策卡 webhook 推送
                  │         ├─ 营养缺口 + 预算 + 券 + 别重样 + 理由
-                 │         └─ 规则打分引擎（v2 计划换求解器）
+                 │         ├─ v1 规则打分（默认，渐进发布中）
+                 │         └─ v2 求解器（硬约束 + 加权目标，MCD_ENGINE 切换）
                  └─ 可用优惠券 / 历史订单 / 当日菜单（麦当劳 MCP）
 ```
 
@@ -71,24 +73,28 @@ McAutoPilot 把这些决策全部交给一个每天自动运行的 Agent。它�
 6. 删掉 `MCD_PREVIEW` 后，每天北京时间 10:00 它会自动醒来写日记；日记会自动 commit 回你的 fork（fork 里自带 commit 历史的连载）
 
 > 想调预算？Variables 里加 `MCD_BUDGET`（默认 40 元）。
-> 想动真格下单？`MCD_DRY_RUN=false` ——但请三思，v1 的执行链只到"订单草稿"为止。
+> 想换决策引擎？`MCD_ENGINE=v2` 启用求解器（硬约束过滤 + 加权目标 + 分数构成明细）。
+> 想动真格下单？除了 `MCD_DRY_RUN=false`，还需要**每天**把 `MCD_CONFIRM_ORDER` 设为当天日期（如 `2026-10-15`）作为二次确认，且实付超预算会被硬护栏拦下——订单只到"待支付"，支付永远人工完成。
 
 ## 项目结构
 
 ```
-.github/workflows/autopilot.yml   # 每日 10:00 自动驾驶循环（含日记自动 commit）
+.github/workflows/autopilot.yml   # 每日 10:00 自动驾驶循环（含日记自动 commit + 决策卡推送）
 agent/
   main.py                         # 主循环入口（python -m agent.main）
   config.py                       # 配置：Token 只从环境变量读，永不落仓库
   perceive.py                     # 感知层：菜单/券/历史订单/营养/积分 归一化
-  brain.py                        # 决策引擎 v1：规则打分（券+营养+预算+换口味）
+  brain.py                        # 决策引擎：v1 规则打分 / v2 求解器（硬约束+加权目标）
+  executor.py                     # 执行链：自动领券 + 真实下单（三重护栏）
   ledger.py                       # 营养台账：滚动 7 天摄入与花费
   report.py                       # 日记渲染：DECISIONS.md 每日条目
+  notify.py                       # 今日决策卡：企业微信/飞书/Discord/通用 webhook
   mcp_client/
     base.py                       # 客户端统一接口 + 返回文本 JSON 提取
     http_client.py                # 真实 MCP 客户端（Streamable HTTP + Bearer + 断连重试）
     mock_client.py                # 离线 Mock（工具名与返回结构对齐真实服务）
     fixtures/                     # 模拟菜单/券/订单数据
+tests/                            # 单测：求解器约束 / 执行链护栏 / 决策卡渲染
 scripts/
   probe_mcp.py                    # MCP 探针：摸清工具返回结构（内置脱敏）
 docs/mcp-tool-samples/            # 真实 MCP 返回结构脱敏样例（决策引擎设计依据）
@@ -103,9 +109,13 @@ CONTEST_DECLARATION.md            # 参赛声明（官方要求，不可改动�
 | 变量 | 默认 | 说明 |
 |---|---|---|
 | `MCD_MCP_TOKEN` | 空 | 麦当劳 MCP Token；不设则自动进入离线 Mock 模式 |
-| `MCD_DRY_RUN` | `true` | true = 只决策+算价草稿；false 才会真实领券/下单（v2 实装） |
-| `MCD_BUDGET` | `40` | 单餐预算上限（元） |
+| `MCD_DRY_RUN` | `true` | true = 只决策+算价草稿；false 才启用真实下单执行链 |
+| `MCD_BUDGET` | `40` | 单餐预算上限（元，执行链硬护栏） |
 | `MCD_PREVIEW` | `false` | true = 真实数据跑完整决策但只写预览，不落 DECISIONS.md（fork 试跑推荐先开这个） |
+| `MCD_ENGINE` | `v1` | 决策引擎：`v1` 规则打分 / `v2` 求解器（硬约束+加权目标，日记带分数构成） |
+| `MCD_CONFIRM_ORDER` | 空 | 下单二次确认：必须等于运行当天日期（YYYY-MM-DD），每天显式更新才持续授权 |
+| `MCD_AUTO_CLAIM` | `false` | true = 每次运行先自动领取麦麦省可用券（零成本写操作） |
+| `MCD_WEBHOOK_URL`（Secret） | 空 | 今日决策卡推送：企业微信/飞书/Discord/通用 webhook 自动适配 |
 
 ## 常见问题
 
@@ -113,7 +123,7 @@ CONTEST_DECLARATION.md            # 参赛声明（官方要求，不可改动�
 Token 只通过 GitHub Secrets 注入环境变量，代码里零硬编码；仓库内的 `mcp-config.example.json` 只有占位符；本地开发走 `.env`（已 gitignore）。推送到 GitHub 前，作者对全部暂存内容做过 Token 值的全文扫描，零命中。
 
 **它会不会乱下单、乱扣钱？**
-默认 `dry-run`：执行链止步于 `calculate-price`——这是一个纯计算接口，不下单、不领券、不动账户。真实下单需要显式设置 `MCD_DRY_RUN=false`，且 v1 尚未实装下单代码，双重保险。
+不会，这里有四层保险：① 默认 `dry-run`，执行链止步于 `calculate-price`（纯计算接口）；② 真实下单需要显式设 `MCD_DRY_RUN=false`；③ 还需每天把 `MCD_CONFIRM_ORDER` 设为当天日期作为二次确认——日期每天变，忘改了就自动回到不下单状态；④ 实付超过 `MCD_BUDGET` 被硬护栏直接拦下。且 MCP 的下单接口只生成**待支付订单**，支付链接留给人工扫码，agent 全程不碰钱。
 
 **它怎么知道"我"想吃什么？**
 看三样东西：你的历史订单（换口味规则会惩罚连续重复）、你的营养台账（7 天滚动均值找缺口）、当天的券（不用就浪费）。它不猜口味玄学，每条理由都带数字。
@@ -133,8 +143,9 @@ Token 只通过 GitHub Secrets 注入环境变量，代码里零硬编码；仓�
 - [x] D1 感知链路：MCP 客户端 + Mock 模式 + Actions 定时任务
 - [x] D2 决策引擎 v1（规则打分）+ DECISIONS.md 自动渲染与 commit + 营养台账
 - [x] D3 演示 GIF + fork 指南完善 + 首波发布（掘金长文已发：[juejin.cn/spost/7696387828728594473](https://juejin.cn/spost/7696387828728594473)）
-- [ ] v2 求解器（多约束优化替代规则打分）+ 真实下单执行链
-- [ ] webhook 实时推送"今日决策卡"
+- [x] v2 求解器（硬约束 + 加权目标，`MCD_ENGINE=v2` 切换）+ 真实下单执行链（三重护栏）
+- [x] webhook "今日决策卡"推送（企业微信/飞书/Discord 自动适配）
+- [ ] 引擎调优观察：券命中率（配合 `MCD_AUTO_CLAIM` 自动领券）、组合多样性
 
 ## 大赛
 

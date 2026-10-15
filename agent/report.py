@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 import re
-from datetime import datetime
 from pathlib import Path
+
+from .config import bj_now
 
 WEEKDAY_CN = "一二三四五六日"
 BADGES = {5: "🏅", 10: "🥈", 15: "🥇", 30: "🏆", 50: "💎", 100: "👑"}
@@ -23,6 +24,20 @@ def next_day(diary_path: Path) -> int:
     return max(days) + 1 if days else 1
 
 
+def has_entry_for_today(diary_path: Path, today: str) -> bool:
+    """当天是否已有"成功决策"的 Day 条目（同日幂等保护的判据）。
+
+    ⚠️ 决策失败的占位条目不算——当天失败后补跑重试是被允许的。
+    """
+    if not diary_path.exists():
+        return False
+    pat = re.compile(rf"^## Day \d+ · {re.escape(today)}")
+    for line in diary_path.read_text(encoding="utf-8").splitlines():
+        if pat.match(line) and "决策失败" not in line:
+            return True
+    return False
+
+
 def render_entry(
     day: int,
     decision,
@@ -33,7 +48,7 @@ def render_entry(
     exec_summary=None,
     claimed: int = 0,
 ) -> str:
-    today = datetime.now()
+    today = bj_now()  # 北京时间（runner 是 UTC，日记口径统一 UTC+8）
     items_txt = " + ".join(it.name for it in decision.items)
     engine_name = "求解器引擎 v2" if getattr(decision, "engine", "v1") == "v2" else "规则引擎 v1"
     lines: list[str] = []
@@ -92,7 +107,7 @@ def render_entry(
         lines.append("")
         lines.append("**感知降级**：" + "；".join(snap.failures))
     lines.append("")
-    lines.append(f"<sub>score {decision.score} · 由 McAutoPilot {engine_name} 于 {today:%H:%M} 自动生成</sub>")
+    lines.append(f"<sub>score {decision.score} · 由 McAutoPilot {engine_name} 于 {today:%H:%M}（北京时间）自动生成</sub>")
     lines.append("")
     lines.append("---")
     lines.append("")

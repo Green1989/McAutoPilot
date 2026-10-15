@@ -1,5 +1,51 @@
 # DEVLOG — McAutoPilot 开发日志
 
+## D5 · 2026-10-15 晚 · 流水线加固：同日幂等 + 决策记忆 + 北京时间（分支 d5-pipeline-hardening，当天验证合并）
+
+### 完成内容（backlog ①② 全清 + 幂等）
+- **同日幂等保护**（`main.py` + `report.has_entry_for_today`）：非 mock、非 preview 模式下，
+  当天 DECISIONS.md 已有成功决策条目时整条流水线直接跳过（exit 0，workflow 保持绿）——
+  防 GitHub 丢触发后的手动补跑/误触 dispatch 写出同日两条 Day 条目。检查放在连 MCP 之前，
+  所有写副作用（日记/台账/last-decision/live 下单）一并挡住；`MCD_FORCE=true` 绕过（测试用）。
+  ⚠️ 决策失败的占位条目不算"已写过"——当天失败后补跑重试是允许的
+- **决策记忆**（新模块 `agent/memory.py`）：`state/decision-history.json` 滚动 60 天
+  （`[{date, items, pay}]`），每次成功写日记后追加；感知阶段并回 `snap.history`
+  （同日已有真实订单的跳过，`HistoryOrder.source` 标注来源）。dry-run 下决策不是订单、
+  order-list 看不见——这是 Day 2 与 Day 1 选同款芝士安格斯的根因，v1 重复惩罚与
+  v2 新鲜度由此同时恢复视力。首次运行文件缺失时从 DECISIONS.md 解析 Day 条目做种子
+  （惰性：只进内存，record 落盘时才随记忆写出，mock/preview 零写副作用）；
+  Day 0 占位 / 决策失败条目 / "（无——"占位自动跳过
+- **北京时间统一**（`config.BJ_TZ/bj_now/bj_today`）：日记时间戳（Day 2 曾显示 UTC 03:11）、
+  同日幂等的"今天"、last-decision/last-order/台账日期、下单二次确认的当日令牌
+  （`executor.py`）全部改为 UTC+8 固定口径——runner 是 UTC，裸 `now()` 差 8 小时
+- **配套**：workflow 的 git add 补 `state/decision-history.json`（跨 Actions run 存活必需，
+  不动 cron/权限/依赖）；README 配置表加 `MCD_FORCE`；state/README.md 重写（并如实标注
+  last-order.json 不在 .gitignore——D4 决策 #5 的文档偏差，红线禁止改 gitignore 故以
+  文档警示代替）
+- **测试**：新增 `tests/test_pipeline.py` 13 个（幂等命中/失败条目放行/main 集成零副作用/
+  force 解析/种子解析/滚动与同日覆盖/合并去重与来源标注/v1+v2 吃记忆后避开昨日同款/
+  时区固定偏移/渲染含北京时间与北京日期），全套 35 绿
+
+### 验证（全过）
+- `python -m pytest tests/ -q` → 35 passed
+- mock 全链路：决策记忆"2 天（由 DECISIONS.md 种子解析）· 并入历史 2 条"，DECISIONS.md 零改动
+- live 预览 v1：真实感知（长兴路 128 餐品）+ 真实算价 → 双层深海鳕鱼堡 ¥24.0（重复惩罚生效，不再选连吃两天的芝士安格斯）
+- live 预览 v2：双层吉士汉堡+麦乐鸡 ¥37.0，新鲜度 +1.5 满分（避开同款），分数构成 7 项完整，时间戳"22:46（北京时间）"
+- 幂等实机：今天已有 Day 2 条目时裸跑 live-dryrun → 打印跳过提示、exit 0、连 MCP 都未建立、日记/台账/last-decision 零改动
+
+### 代理决策清单（授权来源：AGENTS.md 无人值守政策预授权 + 任务提示词"当天合并已授权"）
+| # | 决策 | 依据 | 回滚方式 |
+|---|------|------|---------|
+| 1 | 幂等检查放在连 MCP 之前（而非字面"写日记前"） | 覆盖全部写副作用（含 live 重复下单这一更危险的同日重复），且省一次 API 连接 | 把检查挪到 insert_entry 调用前 |
+| 2 | ⚠️ 决策失败条目不触发幂等 | 失败条目无台账/last-decision 副作用，同日重试价值大于日记整洁 | has_entry_for_today 去掉失败行排除 |
+| 3 | executor 当日确认令牌、main 各处日期一并改北京口径（任务只点名 report.py） | MCD_CONFIRM_ORDER 语义是"运行当天"，UTC 16:00-24:00 窗口会与北京日期错位；test_executor 已同步 | executor/main 还原 date.today() |
+| 4 | workflow git add 补 decision-history.json | 红线只限 cron/权限/依赖结构；Actions 每次 checkout 干净副本，不加则记忆在 CI 上失效 | 删该文件名 |
+| 5 | 种子惰性落盘（record 时才写文件） | mock/preview 零写副作用的验收红线；DECISIONS.md 始终是真相源 | 改为构造时立即落盘 |
+| 6 | state/README.md 只作文档修正、不加 .gitignore 条目 | D4 声称 last-order.json 已 gitignore 与现实不符；任务红线禁止改 state/ 的 gitignore 规则 | 还原该文件 |
+| 7 | 记忆 pay 取值优先级：实测算价 > 券后约 > 菜单价 | 真实实付 > 估算实付 > 未折价 | 调整 _PAY_PATTERNS 顺序 |
+
+---
+
 ## D4 · 2026-10-14 晚 · v2 开发（分支 v2，待 Day 2 验证后合并）
 
 ### 完成内容

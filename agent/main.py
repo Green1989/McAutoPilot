@@ -1,28 +1,32 @@
 """McAutoPilot 每日主循环入口：python -m agent.main
 
-循环：感知（菜单/券/历史/营养/积分）→ 决策（v1 规则打分 / v2 求解器，MCD_ENGINE 切换）
-→ 执行（dry-run 算价草稿；live 走领券 + create-order 三重护栏）→ 记录（DECISIONS.md
-插入 + 营养台账 + commit 消息）。
+循环：感知（菜单/券/历史/营养/积分 + 决策记忆）→ 决策（v1 规则打分 / v2 求解器，
+MCD_ENGINE 切换）→ 执行（dry-run 算价草稿；live 走领券 + create-order 三重护栏）
+→ 记录（DECISIONS.md 插入 + 营养台账 + 决策记忆 + commit 消息）。
 
 模式约定：
 - mock（无 Token）：完整跑决策，但日记只写 state/preview.md，绝不碰 DECISIONS.md；
 - live-dryrun（默认）：真实感知 + 真实算价（calculate-price 纯计算），写入 DECISIONS.md；
 - live（MCD_DRY_RUN=false）：执行链启用——需再过 MCD_CONFIRM_ORDER 当日二次确认
   与预算硬护栏，才会调 auto-bind-coupons / create-order（且支付永远人工完成）。
+
+同日幂等：非 mock、非 preview 模式下，当天 DECISIONS.md 已有成功决策条目时整条
+流水线直接跳过（exit 0，workflow 保持绿）——防 cron 补触发/误触 dispatch 写出同日
+两条 Day 条目。MCD_FORCE=true 可绕过（测试/手动重写用）。
 """
 from __future__ import annotations
 
 import asyncio
 import json
 import sys
-from datetime import date
 
 from . import report
 from .brain import decide
-from .config import REPO_ROOT, Settings
+from .config import REPO_ROOT, Settings, bj_today
 from .executor import claim_coupons, execute_order
 from .ledger import Ledger
 from .mcp_client import make_client
+from .memory import DecisionMemory
 from .perceive import perceive, price_check
 
 DIARY = REPO_ROOT / "DECISIONS.md"
@@ -35,7 +39,14 @@ async def run() -> int:
     print(f"[McAutoPilot] 模式: {mode}" + ("（未配置 MCD_MCP_TOKEN，使用离线模拟数据）" if mode == "mock" else ""))
     print(f"[McAutoPilot] dry-run: {settings.dry_run} · 预算: ¥{settings.budget:.0f} · 引擎: {settings.engine}")
 
+    today = bj_today()  # 全流水线统一北京日期（runner 是 UTC，裸 today() 会差 8 小时）
     ledger = Ledger(STATE_DIR / "nutrition.json")
+
+    # 同日幂等保护：今天已写过日记（成功决策条目）则整条流水线跳过。
+    # 放在连 MCP 之前——所有写副作用（日记/台账/last-decision/live 下单）一并挡住。
+    if mode != "mock" and not settings.preview and not settings.force and report.has_entry_for_today(DIARY, today):
+        print(f"[McAutoPilot] 今天（{today}）已写过日记，幂等跳过本次运行（要重跑设 MCD_FORCE=true）")
+        return 0
 
     async with make_client(settings) as client:
         # 可选前置写操作：自动领券（零成本）。默认关（MCD_AUTO_CLAIM），保持 dry-run 语义纯净。
@@ -49,13 +60,20 @@ async def run() -> int:
         for f in snap.failures:
             print(f"  [降级] {f}")
 
+        # 决策记忆并回感知历史：dry-run 下的决策不是订单，order-list 看不见它们，
+        # 不并回来的话换口味规则（v1 重复惩罚 / v2 新鲜度）就是瞎的。
+        memory = DecisionMemory.load_or_seed(STATE_DIR / "decision-history.json", DIARY)
+        merged = memory.merge_into(snap.history)
+        seed_note = "（由 DECISIONS.md 种子解析）" if memory.seeded else ""
+        print(f"[McAutoPilot] 决策记忆: {len(memory.days)} 天{seed_note} · 并入历史 {merged} 条（来源 decision-history）")
+
         day = report.next_day(DIARY)
         try:
             decision = decide(snap, budget=settings.budget, engine=settings.engine)
         except ValueError as exc:
             print(f"[McAutoPilot] 决策失败: {exc}", file=sys.stderr)
             entry = (
-                f"## Day {day} · {date.today()} · ⚠️ 决策失败\n\n"
+                f"## Day {day} · {today} · ⚠️ 决策失败\n\n"
                 f"今天没能做出决定：{exc}\n\n---\n"
             )
             if mode != "mock":
@@ -79,7 +97,7 @@ async def run() -> int:
             if exec_summary.raw_snippet:
                 STATE_DIR.mkdir(exist_ok=True)
                 (STATE_DIR / "last-order.json").write_text(json.dumps({
-                    "day": day, "date": date.today().isoformat(),
+                    "day": day, "date": today,
                     "status": exec_summary.status, "reason": exec_summary.reason,
                     "orderId": exec_summary.order_id, "payUrl": exec_summary.pay_url,
                     "pay": price_info["pay"] if price_info else None,
@@ -100,16 +118,19 @@ async def run() -> int:
             print(f"[McAutoPilot] 预览已写 {STATE_DIR / 'preview.md'}（不写入 DECISIONS.md）")
         else:
             report.insert_entry(DIARY, entry)
+            # 决策记忆追加（含首次种子一并落盘）：明天的换口味规则靠它
+            memory.record(today, [i.name for i in decision.items], pay)
+            memory.save()
             if decision.nutrition:
                 ledger.update(
-                    date.today().isoformat(),
+                    today,
                     decision.nutrition["kcal"], decision.nutrition["protein"],
                     decision.nutrition["sodium"], pay,
                 )
                 ledger.save()
             STATE_DIR.mkdir(exist_ok=True)
             (STATE_DIR / "last-decision.json").write_text(json.dumps({
-                "day": day, "date": date.today().isoformat(), "mode": mode, "engine": decision.engine,
+                "day": day, "date": today, "mode": mode, "engine": decision.engine,
                 "items": [{"code": i.code, "name": i.name} for i in decision.items],
                 "coupon": decision.coupon.title if decision.coupon else None,
                 "pay": pay, "score": decision.score,

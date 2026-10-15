@@ -46,7 +46,7 @@ jobs:
         run: |
           git config user.name "McAutoPilot Bot"
           git config user.email "actions@github.com"
-          git add DECISIONS.md state/nutrition.json state/last-decision.json
+          git add DECISIONS.md state/nutrition.json state/last-decision.json state/decision-history.json
           if git diff --cached --quiet; then
             echo "nothing to commit (mock mode or no change)"
           else

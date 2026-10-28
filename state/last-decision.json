@@ -1,6 +1,6 @@
 {
-  "day": 15,
-  "date": "2026-10-27",
+  "day": 16,
+  "date": "2026-10-28",
   "mode": "live-dryrun",
   "engine": "v2",
   "items": [
@@ -11,7 +11,7 @@
   ],
   "coupon": null,
   "pay": 34.5,
-  "score": 5.84,
+  "score": 5.93,
   "reasons": [
     "蛋白质 34g 达标（目标 ≥30g），下午写码不困",
     "热量 707kcal 落在 480-820 的午餐甜区"
